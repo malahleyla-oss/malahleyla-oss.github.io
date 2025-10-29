@@ -1,0 +1,88 @@
+body {
+  font-family: "Arial", sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: #f9fafc;
+  color: #333;
+}
+
+header {
+  background-color: #222;
+  color: gold;
+  text-align: center;
+  padding: 1rem;
+}
+
+nav a {
+  color: gold;
+  margin: 0 10px;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* Pseudo-class example */
+nav a:hover {
+  color: white;
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+  font-family: "Helvetica", sans-serif;
+  color: #222;
+}
+
+section {
+  padding: 20px;
+  margin: 15px;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.1);
+}
+
+.project-card {
+  border: 1px solid #ddd;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+/* Contact form styling */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 400px;
+}
+
+input,
+textarea,
+button {
+  padding: 10px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+button {
+  background-color: gold;
+  border: none;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #f0c400;
+}
+
+
+@media (max-width: 768px) {
+  nav {
+    display: flex;
+    flex-direction: column;
+  }
+
+  section {
+    margin: 10px;
+  }
+}
+
