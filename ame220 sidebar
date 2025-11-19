@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>AME220 Sidebar Demo</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="icon" type="image/png" href="AME220/favicon_io/favicon-32x32.png" />
+  <link rel="stylesheet" href="AME220/styles.css" />
+ 
+  <style>
+    
+    :root {
+      --sidebar-width: 280px;
+      --transition: 250ms ease;
+    }
+
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: grid;
+      grid-template-columns: auto 1fr;
+      grid-template-areas:
+        "sidebar content";
+      transition: background var(--transition);
+    }
+
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 3;
+      background: #fff;
+      border-bottom: 1px solid #eee;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      grid-area: sidebar;
+      width: var(--sidebar-width);
+      border-right: 1px solid #eee;
+      background: #fafafa;
+      height: 100dvh;
+      position: sticky;
+      top: 0;
+      padding: 1rem;
+      transform: translateX(0);
+      transition: transform var(--transition);
+      overflow-y: auto;
+    }
+
+    /* Content */
+    .content {
+      grid-area: content;
+      padding: 1.25rem;
+      transition: margin var(--transition), width var(--transition);
+    }
+
+  
+    body.closed .sidebar {
+      transform: translateX(-100%);
+    }
+
+    
+    @media (max-width: 768px) {
+      body {
+        grid-template-columns: 1fr;
+        grid-template-areas:
+          "content";
+      }
+
+      .sidebar {
+        position: fixed;
+        left: 0; top: 0; bottom: 0; right: 0;
+        width: 100%;
+        max-width: none;
+        transform: translateX(-100%);
+        background: #ffffff;
+        z-index: 5;
+      }
+
+      body.open .sidebar {
+        transform: translateX(0);
+      }
+
+     
+      .overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0,0,0,.35);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity var(--transition);
+        z-index: 4;
+      }
+      body.open .overlay {
+        opacity: 1;
+        pointer-events: auto;
+      }
+    }
+
+    
+    .hamburger {
+      display: inline-flex;
+      align-items: center;
+      gap: .5rem;
+      border: 1px solid #ddd;
+      background: #fff;
+      border-radius: .5rem;
+      padding: .5rem .75rem;
+      margin: .75rem;
+      cursor: pointer;
+      transition: transform var(--transition);
+    }
+    .hamburger:active { transform: scale(0.98); }
+    .hamburger .lines {
+      display: inline-block;
+      width: 20px; height: 2px;
+      background: #222;
+      position: relative;
+    }
+    .hamburger .lines::before,
+    .hamburger .lines::after{
+      content: "";
+      position: absolute;
+      left: 0;
+      width: 20px; height: 2px;
+      background: #222;
+      transition: transform var(--transition), opacity var(--transition);
+    }
+    .hamburger .lines::before { top: -6px; }
+    .hamburger .lines::after  { top:  6px; }
+
+    
+    body.open .hamburger .lines { background: transparent; }
+    body.open .hamburger .lines::before { transform: translateY(6px) rotate(45deg); }
+    body.open .hamburger .lines::after  { transform: translateY(-6px) rotate(-45deg); }
+  </style>
+</head>
+<body class="open">
+
+  <header>
+    <button id="menuBtn"
+            class="hamburger"
+            aria-label="Toggle navigation"
+            aria-controls="sidebar"
+            aria-expanded="true">
+      <span class="lines" aria-hidden="true"></span>
+      <span>Menu</span>
+    </button>
+  </header>
+
+  <aside id="sidebar" class="sidebar" role="navigation" aria-label="Primary">
+    <nav>
+      <h3>Site Navigation</h3>
+      <ul>
+        <li><a href="#">Overview</a></li>
+        <li><a href="#">Assignments</a></li>
+        <li><a href="#">Lectures</a></li>
+        <li><a href="#">Resources</a></li>
+      </ul>
+    </nav>
+  </aside>
+
+
+  <div class="overlay" id="overlay" hidden></div>
+
+  <main id="content" class="content">
+    <h1>Responsive Sidebar Demo</h1>
+    <p>
+      Click the hamburger to show/hide the side nav.<br>
+      On desktop: content area feels wider when the nav is hidden.<br>
+      On mobile (≤768px): the nav becomes a full-screen drawer; tap overlay or press Esc to close.
+    </p>
+    <p>
+      This page demonstrates the required DOM updates and responsive behavior from the assignment brief.
+    </p>
+  </main>
+
+
+  <script>
+   
+    let isOpen = true;
+
+    const body    = document.body;
+    const btn     = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.getElementById('overlay');
+
+    function applyState() {
+      body.classList.toggle('open',  isOpen);
+      body.classList.toggle('closed', !isOpen);
+      btn.setAttribute('aria-expanded', String(isOpen));
+
+      const isMobile = window.matchMedia('(max-width: 768px)').matches;
+      if (overlay) {
+        if (isOpen && isMobile) {
+          overlay.hidden = false;
+        } else {
+          overlay.hidden = true;
+        }
+      }
+    }
+
+    function toggleNav() {
+      isOpen = !isOpen;
+      applyState();
+    }
+
+    btn.addEventListener('click', toggleNav);
+
+ 
+    overlay.addEventListener('click', () => {
+      if (isOpen) {
+        isOpen = false;
+        applyState();
+      }
+    });
+
+   
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && isOpen) {
+        isOpen = false;
+        applyState();
+      }
+    });
+
+    
+    window.addEventListener('resize', applyState);
+
+    
+    applyState();
+  </script>
+</body>
+</html>
